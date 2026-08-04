@@ -38,7 +38,7 @@ public abstract class Account {
             balance -= amount;
         }
         else {
-            //throw new InsuficientBalanceOrSmth
+            //throw new InsufficientBalanceOrSmth
         }
     }
 }
