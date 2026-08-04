@@ -1,5 +1,8 @@
 package domain_models;
 
+import exceptions.InsufficientFundsException;
+import exceptions.InvalidAmountException;
+
 public abstract class Account {
     private final String accountNumber;
     private final String holderName;
@@ -29,7 +32,7 @@ public abstract class Account {
             balance += amount;
         }
         else {
-            throw new IllegalArgumentException();
+            throw new InvalidAmountException("Invalid amount. Cannot deposit negative balance");
         }
     }
 
@@ -38,7 +41,7 @@ public abstract class Account {
             balance -= amount;
         }
         else {
-            //throw new InsufficientBalanceOrSmth
+            throw new InsufficientFundsException("Insufficient Funds");
         }
     }
 }
