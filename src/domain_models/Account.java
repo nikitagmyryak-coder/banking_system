@@ -37,7 +37,7 @@ public abstract class Account {
     }
 
     public void withdraw(double amount) {
-        if(amount < 0) {
+        if(amount <= 0) {
             throw new InvalidAmountException("Invalid amount. Cannot withdraw negative balance");
         }
         if (balance >= amount) {
