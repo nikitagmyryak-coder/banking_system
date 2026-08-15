@@ -1,7 +1,5 @@
 package domain_models;
 
-import exceptions.InsufficientFundsException;
-
 public class CheckingAccount extends Account {
 
     private double overdraftLimit;
@@ -17,7 +15,7 @@ public class CheckingAccount extends Account {
             balance -= amount;
         }
         else {
-            throw new InsufficientFundsException("Exceeds overdraft limit");
+            //throw new InsufficientBalanceOrSmth
         }
     }
 
