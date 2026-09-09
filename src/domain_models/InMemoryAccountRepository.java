@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ArrayList;
 
+/**
+ * repository implementation backed by a HashMap; temporary, to be replaced by JDBC later
+*/
 public class InMemoryAccountRepository implements AccountRepository {
     private final Map<String, Account> accounts = new HashMap<>();
 

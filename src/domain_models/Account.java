@@ -3,6 +3,11 @@ package domain_models;
 import exceptions.InsufficientFundsException;
 import exceptions.InvalidAmountException;
 
+/**
+ * Base account class: holds account number, holder name, balance;
+ * knows how to validate and perform deposit/withdraw.
+ */
+
 public abstract class Account {
     private final String accountNumber;
     private final String holderName;

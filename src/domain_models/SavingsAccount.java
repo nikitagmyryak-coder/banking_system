@@ -1,5 +1,8 @@
 package domain_models;
 
+/**
+ * a savings account with an interest rate and interest accrual
+ */
 public class SavingsAccount extends Account {
 
     private double interestRate;

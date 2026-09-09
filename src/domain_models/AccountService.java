@@ -2,6 +2,10 @@ package domain_models;
 
 import exceptions.AccountNotFoundException;
 
+/**
+ * business logic for account operations (deposit, withdraw, transfer); works through AccountRepository
+ */
+
 public class AccountService {
     private final AccountRepository repository;
 

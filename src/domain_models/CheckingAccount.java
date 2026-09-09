@@ -3,6 +3,9 @@ package domain_models;
 import exceptions.InsufficientFundsException;
 import exceptions.InvalidAmountException;
 
+/**
+ * an account with an overdraft limit, overrides withdraw to allow going negative up to that limit
+*/
 public class CheckingAccount extends Account {
 
     private double overdraftLimit;
