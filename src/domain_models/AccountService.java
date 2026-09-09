@@ -14,4 +14,13 @@ public class AccountService {
                 .findById(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account was not found"));
     }
+    public void deposit(String accountNumber, double amount){
+        Account temp = getAccount(accountNumber);
+        temp.deposit(amount);
+    }
+
+    public void withdraw(String accountNumber, double amount){
+        Account temp = getAccount(accountNumber);
+        temp.withdraw(amount);
+    }
 }
