@@ -27,4 +27,9 @@ public class AccountService {
         Account temp = getAccount(accountNumber);
         temp.withdraw(amount);
     }
+
+    public void transfer(String fromAccountNumber, String toAccountNumber, double amount){
+        withdraw(fromAccountNumber, amount);
+        deposit(toAccountNumber, amount);
+    }
 }
