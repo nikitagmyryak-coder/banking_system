@@ -15,6 +15,7 @@ public class Main {
         SavingsAccount s2 = as.createSavingsAccount("S Dwa", 959595, 0.1);
         SavingsAccount s3 = as.createSavingsAccount("S Tri", 5678, 0.07);
 
+        as.addInterestRate(s2.getAccountNumber());
         as.transfer(c3.getAccountNumber(), s3.getAccountNumber(), 100);
         as.transfer(c2.getAccountNumber(), s1.getAccountNumber(), 5);
         as.deposit(c1.getAccountNumber(), 50);

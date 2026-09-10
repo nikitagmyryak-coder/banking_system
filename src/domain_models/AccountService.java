@@ -1,6 +1,8 @@
 package domain_models;
 
 import exceptions.AccountNotFoundException;
+import exceptions.InvalidAmountException;
+
 import java.util.List;
 
 /**
@@ -56,5 +58,16 @@ public class AccountService {
 
     public List<Account> getAllAccounts(){
         return repository.findAll();
+    }
+
+    public void addInterestRate(String accountNumber){
+        Account temp = getAccount(accountNumber);
+
+        if(temp instanceof SavingsAccount){
+            SavingsAccount savings = (SavingsAccount) temp;
+            savings.addInterest();
+        } else{
+            throw new UnsupportedOperationException("not a saving account");
+        }
     }
 }
