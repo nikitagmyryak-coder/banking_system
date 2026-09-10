@@ -35,4 +35,9 @@ public class CheckingAccount extends Account {
     public void setOverdraftLimit(double overdraftLimit) {
         this.overdraftLimit = overdraftLimit;
     }
+
+    @Override
+    public String toString(){
+        return "Checking Account: " + super.toString() + " overdraft limit: " + overdraftLimit;
+    }
 }

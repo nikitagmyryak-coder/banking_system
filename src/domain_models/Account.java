@@ -73,4 +73,9 @@ public abstract class Account {
         LocalDateTime time = LocalDateTime.now();
         transactions.add(new Transaction(transactionId, type, amount, time));
     }
+
+    @Override
+    public String toString(){
+        return "[" + accountNumber + "] " + "Holder: " + holderName + " Current balance: " + balance;
+    }
 }

@@ -1,6 +1,9 @@
 package domain_models;
 
 import exceptions.AccountNotFoundException;
+import exceptions.InvalidAmountException;
+
+import java.util.List;
 
 /**
  * business logic for account operations (deposit, withdraw, transfer); works through AccountRepository
@@ -51,5 +54,20 @@ public class AccountService {
                 generateAccountHelper(), holderName, initialBalance, interestRate);
         repository.save(temp);
         return temp;
+    }
+
+    public List<Account> getAllAccounts(){
+        return repository.findAll();
+    }
+
+    public void addInterestRate(String accountNumber){
+        Account temp = getAccount(accountNumber);
+
+        if(temp instanceof SavingsAccount){
+            SavingsAccount savings = (SavingsAccount) temp;
+            savings.addInterest();
+        } else{
+            throw new UnsupportedOperationException("not a saving account");
+        }
     }
 }

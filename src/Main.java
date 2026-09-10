@@ -1,6 +1,4 @@
-import domain_models.AccountService;
-import domain_models.CheckingAccount;
-import domain_models.InMemoryAccountRepository;
+import domain_models.*;
 import exceptions.AccountNotFoundException;
 import exceptions.InsufficientFundsException;
 
@@ -9,24 +7,32 @@ public class Main {
         InMemoryAccountRepository imar = new InMemoryAccountRepository();
         AccountService as = new AccountService(imar);
 
-        CheckingAccount test = as.createCheckingAccount("Holder Name", 67, 2000);
-        System.out.println("Before: " + test.getBalance() + " " + test.getAccountNumber());
+        CheckingAccount c1 = as.createCheckingAccount("C One", 67, 2000);
+        CheckingAccount c2 = as.createCheckingAccount("C Two", 605, 100);
+        CheckingAccount c3 = as.createCheckingAccount("C Three", 4445, 5000);
 
-        as.deposit(test.getAccountNumber(), 100);
-        System.out.println("After deposit: " + test.getBalance() + " " + test.getAccountNumber());
+        SavingsAccount s1 = as.createSavingsAccount("S Odin", 228, 0.05);
+        SavingsAccount s2 = as.createSavingsAccount("S Dwa", 959595, 0.1);
+        SavingsAccount s3 = as.createSavingsAccount("S Tri", 5678, 0.07);
+
+        as.addInterestRate(s2.getAccountNumber());
+        as.transfer(c3.getAccountNumber(), s3.getAccountNumber(), 100);
+        as.transfer(c2.getAccountNumber(), s1.getAccountNumber(), 5);
+        as.deposit(c1.getAccountNumber(), 50);
+        as.withdraw(c1.getAccountNumber(), 20);
 
         try{
-            as.deposit("ACC-9999", 50);
-        } catch(AccountNotFoundException anfe){
-            System.out.println("Caught: " + anfe.getMessage());
-        }
-
-        try{
-           as.withdraw(test.getAccountNumber(), 69000);
+            as.withdraw(c1.getAccountNumber(), 3000);
         } catch(InsufficientFundsException ife){
-            System.out.println("Caught: " + ife.getMessage());
+            System.err.println("Caught: " + ife.getMessage());
         }
 
-        System.out.println(test.getTransactionHistory());
+        for (Account acc : as.getAllAccounts()) {
+            System.out.println(acc);
+        }
+
+        for (Transaction t : c1.getTransactionHistory()) {
+            System.out.println(t);
+        }
     }
 }

@@ -24,4 +24,9 @@ public class SavingsAccount extends Account {
         double interest = interestRate * balance;
         balance += interest;
     }
+
+    @Override
+    public String toString(){
+        return "Savings Account: " + super.toString() + " interest rate: " + String.format("%.1f%%", interestRate * 100);
+    }
 }
