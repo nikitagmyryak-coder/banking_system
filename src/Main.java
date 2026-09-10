@@ -26,5 +26,7 @@ public class Main {
         } catch(InsufficientFundsException ife){
             System.out.println("Caught: " + ife.getMessage());
         }
+
+        System.out.println(test.getTransactionHistory());
     }
 }

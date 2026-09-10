@@ -22,6 +22,7 @@ public class CheckingAccount extends Account {
         }
         if ((balance - amount) >= -overdraftLimit) {
             balance -= amount;
+            writeTransaction("Withdraw", amount);
         } else {
             throw new InsufficientFundsException("Exceeds overdraft limit");
         }
