@@ -1,6 +1,7 @@
 package domain_models;
 
 import exceptions.AccountNotFoundException;
+import java.util.List;
 
 /**
  * business logic for account operations (deposit, withdraw, transfer); works through AccountRepository
@@ -51,5 +52,9 @@ public class AccountService {
                 generateAccountHelper(), holderName, initialBalance, interestRate);
         repository.save(temp);
         return temp;
+    }
+
+    public List<Account> getAllAccounts(){
+        return repository.findAll();
     }
 }
