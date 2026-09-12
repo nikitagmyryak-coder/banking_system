@@ -4,9 +4,14 @@ import exceptions.InsufficientFundsException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
+
+        JdbcAccountRepository repo = new JdbcAccountRepository();
+        Optional<Account> found = repo.findById("ACC-TEST-01");
+        System.out.println(found.get());
 
 //        JdbcAccountRepository repo = new JdbcAccountRepository();
 //        CheckingAccount test = new CheckingAccount("ACC-TEST-01", "Test Holder", 500, 1000);
