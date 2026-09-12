@@ -57,6 +57,7 @@ public class JdbcAccountRepository implements AccountRepository{
 
         try(Connection connection = DriverManager.getConnection(url, user, password);
             PreparedStatement stmt = connection.prepareStatement(sqlSelect)){
+
             stmt.setString(1, id);
             ResultSet result = stmt.executeQuery();
 
@@ -78,7 +79,7 @@ public class JdbcAccountRepository implements AccountRepository{
                             return Optional.of(new CheckingAccount(id, holderName, balance, overdraftLimit));
                         }
                     }catch(SQLException e){
-                        throw new RuntimeException("Failed to save account: " + e.getMessage(), e);
+                        throw new RuntimeException("Failed to find account: " + e.getMessage(), e);
                     }
 
                 }else{
@@ -94,7 +95,7 @@ public class JdbcAccountRepository implements AccountRepository{
                             return Optional.of(new SavingsAccount(id, holderName, balance, interestRate));
                         }
                     } catch(SQLException e){
-                        throw new RuntimeException("Failed to save account: " + e.getMessage(), e);
+                        throw new RuntimeException("Failed to find account: " + e.getMessage(), e);
                     }
                 }
 
@@ -104,7 +105,7 @@ public class JdbcAccountRepository implements AccountRepository{
             }
 
         } catch(SQLException e){
-            throw new RuntimeException("Failed to save account: " + e.getMessage(), e);
+            throw new RuntimeException("Failed to find account: " + e.getMessage(), e);
         }
         return Optional.empty();
     }
