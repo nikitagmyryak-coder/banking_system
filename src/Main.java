@@ -11,10 +11,13 @@ public class Main {
     public static void main(String[] args) {
 
         JdbcAccountRepository repo = new JdbcAccountRepository();
-        List<Account> all = repo.findAll();
-        for (Account acc : all) {
-            System.out.println(acc);
-        }
+        repo.deleteById("ACC-TEST-01");
+
+//        JdbcAccountRepository repo = new JdbcAccountRepository();
+//        List<Account> all = repo.findAll();
+//        for (Account acc : all) {
+//            System.out.println(acc);
+//        }
 //        JdbcAccountRepository repo = new JdbcAccountRepository();
 //        Optional<Account> found = repo.findById("ACC-TEST-01");
 //        System.out.println(found.get());

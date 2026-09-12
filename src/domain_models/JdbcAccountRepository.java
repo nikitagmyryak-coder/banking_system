@@ -162,7 +162,26 @@ public class JdbcAccountRepository implements AccountRepository{
 
     @Override
     public void deleteById(String id) {
+        String sqlCheckingDelete = "DELETE FROM checking_accounts WHERE account_number = ?";
+        String sqlSavingsDelete = "DELETE FROM savings_accounts WHERE account_number = ?";
+        String sqlAccountDelete = "DELETE FROM accounts WHERE account_number = ?";
 
+        try(Connection connection = DriverManager.getConnection(url, user, password)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sqlCheckingDelete)) {
+                stmt.setString(1, id);
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement(sqlSavingsDelete)) {
+                stmt.setString(1, id);
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement(sqlAccountDelete)) {
+                stmt.setString(1, id);
+                stmt.executeUpdate();
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException("Failed to find any accounts, or the account was already deleted: " + e.getMessage(), e);
+        }
     }
 
     @Override
