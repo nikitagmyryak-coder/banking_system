@@ -1,6 +1,7 @@
 package domain_models;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ public class JdbcAccountRepository implements AccountRepository{
     private final String url = "jdbc:mysql://localhost:3306/banking_system";
     private final String user = "root";
     private final String password = "My_Mysql1";
+
 
     @Override
     public void save(Account account) {
@@ -112,7 +114,50 @@ public class JdbcAccountRepository implements AccountRepository{
 
     @Override
     public List<Account> findAll() {
-        return List.of();
+        String sqlFindAll = "SELECT * FROM accounts";
+
+        try(Connection connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement stmt = connection.prepareStatement(sqlFindAll)){
+
+            List<Account> list = new ArrayList<>();
+            ResultSet result = stmt.executeQuery();
+
+            while(result.next()){
+                String holderName = result.getString("holder_name");
+                double balance = result.getDouble("balance");
+                String accountType = result.getString("account_type");
+                String id = result.getString("account_number");
+
+                if(accountType.equals("CHECKING")){
+                    String sqlChecking = "SELECT overdraft_limit FROM checking_accounts WHERE account_number = ?";
+
+                    try(PreparedStatement stmt2 = connection.prepareStatement(sqlChecking)){
+                        stmt2.setString(1, id);
+                        ResultSet result2 = stmt2.executeQuery();
+
+                        if(result2.next()){
+                            double overdraftLimit = result2.getDouble("overdraft_limit");
+                            list.add(new CheckingAccount(id, holderName, balance, overdraftLimit));
+                        }
+                    }
+                } else{
+                    String sqlSavings = "SELECT interest_rate FROM savings_accounts WHERE account_number = ?";
+
+                    try(PreparedStatement stmt3 = connection.prepareStatement(sqlSavings)){
+                        stmt3.setString(1,id);
+                        ResultSet result3 = stmt3.executeQuery();
+
+                        if(result3.next()){
+                            double interestRate = result3.getDouble("interest_rate");
+                            list.add(new SavingsAccount(id, holderName, balance, interestRate));
+                        }
+                    }
+                }
+            }
+            return list;
+        }catch(SQLException e){
+            throw new RuntimeException("Failed to find any accounts: " + e.getMessage(), e);
+        }
     }
 
     @Override
