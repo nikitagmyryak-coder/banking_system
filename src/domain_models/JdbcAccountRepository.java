@@ -180,14 +180,28 @@ public class JdbcAccountRepository implements AccountRepository{
                 stmt.executeUpdate();
             }
         }catch (SQLException e) {
-            throw new RuntimeException("Failed to find any accounts, or the account was already deleted: " + e.getMessage(), e);
+            throw new RuntimeException("Failed to delete account: " + e.getMessage(), e);
         }
     }
 
     @Override
     public boolean existsById(String id) {
+        String sqlExistsById = "SELECT * FROM accounts WHERE account_number = ?";
+
+        try(Connection connection = DriverManager.getConnection(url, user, password);
+        PreparedStatement stmt = connection.prepareStatement(sqlExistsById)){
+
+            stmt.setString(1, id);
+            ResultSet result = stmt.executeQuery();
+
+            if(result.next()){
+                return true;
+            }
+
+        }catch (SQLException e) {
+            throw new RuntimeException("Failed to check if account exists: " + e.getMessage(), e);
+        }
         return false;
     }
-
 
 }
