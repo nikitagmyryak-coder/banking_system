@@ -1,74 +1,23 @@
 import domain_models.*;
-import exceptions.AccountNotFoundException;
-import exceptions.InsufficientFundsException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
 
-        JdbcAccountRepository repo = new JdbcAccountRepository();
-        repo.deleteById("ACC-TEST-01");
+        JdbcAccountRepository jar = new JdbcAccountRepository();
+        AccountService as = new AccountService(jar);
 
-//        JdbcAccountRepository repo = new JdbcAccountRepository();
-//        List<Account> all = repo.findAll();
-//        for (Account acc : all) {
-//            System.out.println(acc);
-//        }
-//        JdbcAccountRepository repo = new JdbcAccountRepository();
-//        Optional<Account> found = repo.findById("ACC-TEST-01");
-//        System.out.println(found.get());
+        CheckingAccount c1 = as.createCheckingAccount("Checking One", 500, 1000);
+        CheckingAccount c2 = as.createCheckingAccount("Checking Two", 800, 500);
+        CheckingAccount c3 = as.createCheckingAccount("Checking Three", 300, 2000);
 
-//        JdbcAccountRepository repo = new JdbcAccountRepository();
-//        CheckingAccount test = new CheckingAccount("ACC-TEST-01", "Test Holder", 500, 1000);
-//        repo.save(test);
+        SavingsAccount s1 = as.createSavingsAccount("Savings One", 1000, 0.05);
+        SavingsAccount s2 = as.createSavingsAccount("Savings Two", 2000, 0.03);
+        SavingsAccount s3 = as.createSavingsAccount("Savings Three", 500, 0.07);
 
-//        String url = "jdbc:mysql://localhost:3306/banking_system";
-//        String user = "root";
-//        String password = "My_Mysql1";
-//
-//        Connection connection = null;
-//        try {
-//            connection = DriverManager.getConnection(url, user, password);
-//        } catch(SQLException e){
-//            System.out.println("Caught: " + e.getMessage());
-//        }
-//        System.out.println("Connected: " + connection);
-
-//
-//        InMemoryAccountRepository imar = new InMemoryAccountRepository();
-//        AccountService as = new AccountService(imar);
-//
-//        CheckingAccount c1 = as.createCheckingAccount("C One", 67, 2000);
-//        CheckingAccount c2 = as.createCheckingAccount("C Two", 605, 100);
-//        CheckingAccount c3 = as.createCheckingAccount("C Three", 4445, 5000);
-//
-//        SavingsAccount s1 = as.createSavingsAccount("S Odin", 228, 0.05);
-//        SavingsAccount s2 = as.createSavingsAccount("S Dwa", 959595, 0.1);
-//        SavingsAccount s3 = as.createSavingsAccount("S Tri", 5678, 0.07);
-//
-//        as.addInterestRate(s2.getAccountNumber());
-//        as.transfer(c3.getAccountNumber(), s3.getAccountNumber(), 100);
-//        as.transfer(c2.getAccountNumber(), s1.getAccountNumber(), 5);
-//        as.deposit(c1.getAccountNumber(), 50);
-//        as.withdraw(c1.getAccountNumber(), 20);
-//
-//        try{
-//            as.withdraw(c1.getAccountNumber(), 3000);
-//        } catch(InsufficientFundsException ife){
-//            System.err.println("Caught: " + ife.getMessage());
-//        }
-//
-//        for (Account acc : as.getAllAccounts()) {
-//            System.out.println(acc);
-//        }
-//
-//        for (Transaction t : c1.getTransactionHistory()) {
-//            System.out.println(t);
-//        }
+        as.deposit(c1.getAccountNumber(), 100);
+        as.withdraw(c2.getAccountNumber(), 50);
+        as.transfer(c3.getAccountNumber(), s1.getAccountNumber(), 100);
+        as.addInterestRate(s2.getAccountNumber());
 
 
     }

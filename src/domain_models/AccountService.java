@@ -25,11 +25,13 @@ public class AccountService {
     public void deposit(String accountNumber, double amount){
         Account temp = getAccount(accountNumber);
         temp.deposit(amount);
+        repository.save(temp);
     }
 
     public void withdraw(String accountNumber, double amount){
         Account temp = getAccount(accountNumber);
         temp.withdraw(amount);
+        repository.save(temp);
     }
 
     public void transfer(String fromAccountNumber, String toAccountNumber, double amount){
@@ -66,6 +68,7 @@ public class AccountService {
         if(temp instanceof SavingsAccount){
             SavingsAccount savings = (SavingsAccount) temp;
             savings.addInterest();
+            repository.save(temp);
         } else{
             throw new UnsupportedOperationException("not a saving account");
         }

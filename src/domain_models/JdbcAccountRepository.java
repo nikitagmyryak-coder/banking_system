@@ -16,41 +16,62 @@ public class JdbcAccountRepository implements AccountRepository{
         String sql = "INSERT INTO accounts (account_number, holder_name, balance, account_type) VALUES (?, ?, ?, ?)";
         String sqlChecking = "INSERT INTO checking_accounts (account_number, overdraft_limit) VALUES (?, ?)";
         String sqlSavings = "INSERT INTO savings_accounts (account_number, interest_rate) VALUES (?, ?)";
+        String sqlUpdate = "UPDATE accounts SET holder_name = ?, balance = ?, account_type = ? WHERE account_number = ?";
+        boolean exists = existsById(account.getAccountNumber());
 
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setString(1, account.getAccountNumber());
-            stmt.setString(2, account.getHolderName());
-            stmt.setDouble(3, account.getBalance());
-            stmt.setString(4, account instanceof CheckingAccount ? "CHECKING" : "SAVINGS");
-
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to save account: " + e.getMessage(), e);
-        }
 
         try(Connection connection = DriverManager.getConnection(url, user, password)){
-            if(account instanceof CheckingAccount){
-                CheckingAccount ca = (CheckingAccount) account;
 
-                try (PreparedStatement stmt = connection.prepareStatement(sqlChecking)) {
-                    stmt.setString(1, ca.getAccountNumber());
-                    stmt.setDouble(2, ca.getOverdraftLimit());
+            if(!exists) {
+                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+                    stmt.setString(1, account.getAccountNumber());
+                    stmt.setString(2, account.getHolderName());
+                    stmt.setDouble(3, account.getBalance());
+                    stmt.setString(4, account instanceof CheckingAccount ? "CHECKING" : "SAVINGS");
+
                     stmt.executeUpdate();
+
+                    if (account instanceof CheckingAccount) {
+                        CheckingAccount ca = (CheckingAccount) account;
+
+                        try (PreparedStatement stmtC = connection.prepareStatement(sqlChecking)) {
+                            stmtC.setString(1, ca.getAccountNumber());
+                            stmtC.setDouble(2, ca.getOverdraftLimit());
+                            stmtC.executeUpdate();
+                        }
+                    } else if(account instanceof SavingsAccount){
+                        SavingsAccount sa = (SavingsAccount) account;
+
+                        try(PreparedStatement stmtS = connection.prepareStatement(sqlSavings)){
+                            stmtS.setString(1, sa.getAccountNumber());
+                            stmtS.setDouble(2, sa.getInterestRate());
+                            stmtS.executeUpdate();
+                        }
+
+                    }
+
+
+
                 }
-            } else if(account instanceof SavingsAccount){
-                SavingsAccount sa = (SavingsAccount) account;
 
-                try(PreparedStatement stmt = connection.prepareStatement(sqlSavings)){
-                    stmt.setString(1, sa.getAccountNumber());
-                    stmt.setDouble(2, sa.getInterestRate());
-                    stmt.executeUpdate();
+            }else{
+                try(PreparedStatement stmtU = connection.prepareStatement(sqlUpdate)){
+                    stmtU.setString(1,account.getHolderName());
+                    stmtU.setDouble(2, account.getBalance());
+                    stmtU.setString(3, account instanceof CheckingAccount ? "CHECKING" : "SAVINGS");
+                    stmtU.setString(4, account.getAccountNumber());
+
+                    stmtU.executeUpdate();
                 }
             }
+
+
         } catch(SQLException e){
-            throw new RuntimeException("Failed to save account: " + e.getMessage(), e);
+            throw new RuntimeException("An error occurred: " + e.getMessage(), e);
         }
+
+
     }
 
     @Override
