@@ -11,10 +11,12 @@ import java.util.List;
 
 public class AccountService {
     private final AccountRepository repository;
+    private final JdbcTransactionRepository transactionRepository;
     private int nextAccountNumber = 1;
 
-    public AccountService(AccountRepository repository) {
+    public AccountService(AccountRepository repository, JdbcTransactionRepository transactionRepository) {
         this.repository = repository;
+        this.transactionRepository = transactionRepository;
     }
 
     public Account getAccount(String accountNumber){
@@ -25,11 +27,21 @@ public class AccountService {
     public void deposit(String accountNumber, double amount){
         Account temp = getAccount(accountNumber);
         temp.deposit(amount);
+        repository.save(temp);
+
+        List<Transaction> transactionsList = temp.getTransactionHistory();
+        Transaction last = transactionsList.get(transactionsList.size() - 1);
+        transactionRepository.save(temp, last);
     }
 
     public void withdraw(String accountNumber, double amount){
         Account temp = getAccount(accountNumber);
         temp.withdraw(amount);
+        repository.save(temp);
+
+        List<Transaction> transactionsList = temp.getTransactionHistory();
+        Transaction last = transactionsList.get(transactionsList.size() - 1);
+        transactionRepository.save(temp, last);
     }
 
     public void transfer(String fromAccountNumber, String toAccountNumber, double amount){
@@ -66,6 +78,7 @@ public class AccountService {
         if(temp instanceof SavingsAccount){
             SavingsAccount savings = (SavingsAccount) temp;
             savings.addInterest();
+            repository.save(temp);
         } else{
             throw new UnsupportedOperationException("not a saving account");
         }

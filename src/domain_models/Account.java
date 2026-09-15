@@ -76,6 +76,6 @@ public abstract class Account {
 
     @Override
     public String toString(){
-        return "[" + accountNumber + "] " + "Holder: " + holderName + " Current balance: " + balance;
+        return "[" + accountNumber + "] " + "Holder: " + holderName + " | Current balance: " + String.format("%.2f",balance) + "$";
     }
 }

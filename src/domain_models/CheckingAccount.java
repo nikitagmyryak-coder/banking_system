@@ -38,6 +38,6 @@ public class CheckingAccount extends Account {
 
     @Override
     public String toString(){
-        return "Checking Account: " + super.toString() + " overdraft limit: " + overdraftLimit;
+        return "Checking Account: " + super.toString() + " | overdraft limit: " + String.format("%.2f",overdraftLimit);
     }
 }
