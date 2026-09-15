@@ -4,7 +4,8 @@ public class Main {
     public static void main(String[] args) {
 
         JdbcAccountRepository jar = new JdbcAccountRepository();
-        AccountService as = new AccountService(jar);
+        JdbcTransactionRepository jtr = new JdbcTransactionRepository();
+        AccountService as = new AccountService(jar,jtr);
 
         CheckingAccount c1 = as.createCheckingAccount("Checking One", 500, 1000);
         CheckingAccount c2 = as.createCheckingAccount("Checking Two", 800, 500);

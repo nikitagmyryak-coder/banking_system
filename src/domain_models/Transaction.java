@@ -22,4 +22,20 @@ public record Transaction(
                 String.format("%.2f", amount) + " (" +
                 timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) + ")";
     }
+
+    public String getTransactionId(){
+        return transactionId;
+    }
+
+    public String getType(){
+        return type;
+    }
+
+    public double getAmount(){
+        return amount;
+    }
+
+    public LocalDateTime getTime(){
+        return timestamp;
+    }
 }
