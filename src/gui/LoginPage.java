@@ -1,17 +1,18 @@
 package gui;
 
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MyFrame extends JFrame implements ActionListener {
+public class LoginPage extends JFrame implements ActionListener {
     JButton enter;
     JButton signUp;
     JLabel label;
     JTextField login;
     JPasswordField password;
 
-    public MyFrame(){
+    public LoginPage(){
 
         label = new JLabel();
         label.setText("Login");
@@ -38,21 +39,24 @@ public class MyFrame extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setLayout(null);
+        this.setVisible(true);
         this.add(label);
         this.add(enter);
         this.add(login);
         this.add(password);
         this.add(signUp);
 
-        this.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == enter){
-            System.out.println("Enter clicked");
+            System.out.println("User name input is: " + login.getText());
         } else if (e.getSource() == signUp) {
             System.out.println("Sign Up clicked");
+
+            SignUpPage sup = new SignUpPage();
+            this.dispose();
         }
     }
 }

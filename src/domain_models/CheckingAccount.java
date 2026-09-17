@@ -10,8 +10,8 @@ public class CheckingAccount extends Account {
 
     private double overdraftLimit;
 
-    public CheckingAccount(String accountNumber, String holderName, double balance, double overdraftLimit) {
-        super(accountNumber, holderName, balance);
+    public CheckingAccount(String accountNumber, String holderName, String password, double overdraftLimit) {
+        super(accountNumber, holderName, password);
         this.overdraftLimit = overdraftLimit;
     }
 

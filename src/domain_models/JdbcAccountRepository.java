@@ -8,27 +8,28 @@ import java.util.Optional;
 public class JdbcAccountRepository implements AccountRepository{
     private final String url = "jdbc:mysql://localhost:3306/banking_system";
     private final String user = "root";
-    private final String password = "My_Mysql1";
+    private final String passwordSQL = "My_Mysql1";
 
 
     @Override
     public void save(Account account) {
-        String sql = "INSERT INTO accounts (account_number, holder_name, balance, account_type) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO accounts (account_number, holder_name, balance, account_type, password) VALUES (?, ?, ?, ?, ?)";
         String sqlChecking = "INSERT INTO checking_accounts (account_number, overdraft_limit) VALUES (?, ?)";
         String sqlSavings = "INSERT INTO savings_accounts (account_number, interest_rate) VALUES (?, ?)";
         String sqlUpdate = "UPDATE accounts SET holder_name = ?, balance = ?, account_type = ? WHERE account_number = ?";
         boolean exists = existsById(account.getAccountNumber());
 
 
-        try(Connection connection = DriverManager.getConnection(url, user, password)){
+        try(Connection connection = DriverManager.getConnection(url, user, passwordSQL)){
 
             if(!exists) {
                 try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
                     stmt.setString(1, account.getAccountNumber());
                     stmt.setString(2, account.getHolderName());
-                    stmt.setDouble(3, account.getBalance());
+                    stmt.setDouble(3, 0.0);
                     stmt.setString(4, account instanceof CheckingAccount ? "CHECKING" : "SAVINGS");
+                    stmt.setString(5, account.getPassword());
 
                     stmt.executeUpdate();
 
@@ -56,6 +57,7 @@ public class JdbcAccountRepository implements AccountRepository{
                 }
 
             }else{
+                //"UPDATE accounts SET holder_name = ?, balance = ?, account_type = ? WHERE account_number = ?"
                 try(PreparedStatement stmtU = connection.prepareStatement(sqlUpdate)){
                     stmtU.setString(1,account.getHolderName());
                     stmtU.setDouble(2, account.getBalance());
@@ -78,7 +80,7 @@ public class JdbcAccountRepository implements AccountRepository{
     public Optional<Account> findById(String id) {
         String sqlSelect = "SELECT * FROM accounts WHERE account_number = ?";
 
-        try(Connection connection = DriverManager.getConnection(url, user, password);
+        try(Connection connection = DriverManager.getConnection(url, user, passwordSQL);
             PreparedStatement stmt = connection.prepareStatement(sqlSelect)){
 
             stmt.setString(1, id);
@@ -86,7 +88,7 @@ public class JdbcAccountRepository implements AccountRepository{
 
             if(result.next()){
                 String holderName = result.getString("holder_name");
-                double balance = result.getDouble("balance");
+                String password = result.getString("password");
                 String accountType = result.getString("account_type");
 
                 if(accountType.equals("CHECKING")){
@@ -99,7 +101,7 @@ public class JdbcAccountRepository implements AccountRepository{
 
                         if(result2.next()){
                             double overdraftLimit = result2.getDouble("overdraft_limit");
-                            return Optional.of(new CheckingAccount(id, holderName, balance, overdraftLimit));
+                            return Optional.of(new CheckingAccount(id, holderName, password, overdraftLimit));
                         }
                     }catch(SQLException e){
                         throw new RuntimeException("Failed to find account: " + e.getMessage(), e);
@@ -115,7 +117,7 @@ public class JdbcAccountRepository implements AccountRepository{
 
                         if(result3.next()){
                             double interestRate = result3.getDouble("interest_rate");
-                            return Optional.of(new SavingsAccount(id, holderName, balance, interestRate));
+                            return Optional.of(new SavingsAccount(id, holderName, password, interestRate));
                         }
                     } catch(SQLException e){
                         throw new RuntimeException("Failed to find account: " + e.getMessage(), e);
@@ -137,7 +139,7 @@ public class JdbcAccountRepository implements AccountRepository{
     public List<Account> findAll() {
         String sqlFindAll = "SELECT * FROM accounts";
 
-        try(Connection connection = DriverManager.getConnection(url, user, password);
+        try(Connection connection = DriverManager.getConnection(url, user, passwordSQL);
             PreparedStatement stmt = connection.prepareStatement(sqlFindAll)){
 
             List<Account> list = new ArrayList<>();
@@ -145,7 +147,7 @@ public class JdbcAccountRepository implements AccountRepository{
 
             while(result.next()){
                 String holderName = result.getString("holder_name");
-                double balance = result.getDouble("balance");
+                String password = result.getString("password");
                 String accountType = result.getString("account_type");
                 String id = result.getString("account_number");
 
@@ -158,7 +160,7 @@ public class JdbcAccountRepository implements AccountRepository{
 
                         if(result2.next()){
                             double overdraftLimit = result2.getDouble("overdraft_limit");
-                            list.add(new CheckingAccount(id, holderName, balance, overdraftLimit));
+                            list.add(new CheckingAccount(id, holderName, password, overdraftLimit));
                         }
                     }
                 } else{
@@ -170,7 +172,7 @@ public class JdbcAccountRepository implements AccountRepository{
 
                         if(result3.next()){
                             double interestRate = result3.getDouble("interest_rate");
-                            list.add(new SavingsAccount(id, holderName, balance, interestRate));
+                            list.add(new SavingsAccount(id, holderName, password, interestRate));
                         }
                     }
                 }
@@ -187,7 +189,7 @@ public class JdbcAccountRepository implements AccountRepository{
         String sqlSavingsDelete = "DELETE FROM savings_accounts WHERE account_number = ?";
         String sqlAccountDelete = "DELETE FROM accounts WHERE account_number = ?";
 
-        try(Connection connection = DriverManager.getConnection(url, user, password)) {
+        try(Connection connection = DriverManager.getConnection(url, user, passwordSQL)) {
             try (PreparedStatement stmt = connection.prepareStatement(sqlCheckingDelete)) {
                 stmt.setString(1, id);
                 stmt.executeUpdate();
@@ -209,8 +211,8 @@ public class JdbcAccountRepository implements AccountRepository{
     public boolean existsById(String id) {
         String sqlExistsById = "SELECT * FROM accounts WHERE account_number = ?";
 
-        try(Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement stmt = connection.prepareStatement(sqlExistsById)){
+        try(Connection connection = DriverManager.getConnection(url, user, passwordSQL);
+            PreparedStatement stmt = connection.prepareStatement(sqlExistsById)){
 
             stmt.setString(1, id);
             ResultSet result = stmt.executeQuery();

@@ -55,15 +55,15 @@ public class AccountService {
         return number;
     }
 
-    public CheckingAccount createCheckingAccount(String holderName, double initialBalance, double overdraftLimit){
+    public CheckingAccount createCheckingAccount(String holderName, String password, double overdraftLimit){
         CheckingAccount temp = new CheckingAccount(
-                generateAccountHelper(), holderName, initialBalance, overdraftLimit);
+                generateAccountHelper(), holderName, password, overdraftLimit);
         repository.save(temp);
         return temp;
     }
-    public SavingsAccount createSavingsAccount(String holderName, double initialBalance, double interestRate){
+    public SavingsAccount createSavingsAccount(String holderName, String password, double interestRate){
         SavingsAccount temp = new SavingsAccount(
-                generateAccountHelper(), holderName, initialBalance, interestRate);
+                generateAccountHelper(), holderName, password, interestRate);
         repository.save(temp);
         return temp;
     }

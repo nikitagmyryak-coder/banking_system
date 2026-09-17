@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Base account class: holds account number, holder name, balance;
+ * Base account class: holds account number, holder name, password;
  * knows how to validate and perform deposit/withdraw.
  * writes transaction history
  */
@@ -16,14 +16,16 @@ import java.util.List;
 public abstract class Account {
     private final String accountNumber;
     private final String holderName;
-    protected double balance;
+    private final String password;
+    protected double balance = 0.0;
     protected List<Transaction> transactions = new ArrayList<>();
     private static int nextTransactionId = 1;
 
-    public Account(String accountNumber, String holderName, double balance) {
+    public Account(String accountNumber, String holderName, String password) {
         this.accountNumber = accountNumber;
         this.holderName = holderName;
-        this.balance = balance;
+        this.password = password;
+
     }
 
     // =============== GETTERS ===============
@@ -37,6 +39,10 @@ public abstract class Account {
 
     public double getBalance() {
         return balance;
+    }
+
+    public String getPassword(){
+        return password;
     }
 
     public List<Transaction> getTransactionHistory(){
