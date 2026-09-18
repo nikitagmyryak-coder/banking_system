@@ -29,4 +29,9 @@ public class SavingsAccount extends Account {
     public String toString(){
         return "Savings Account: " + super.toString() + " | interest rate: " + String.format("%.1f%%", interestRate * 100);
     }
+
+    @Override
+    public void close() throws Exception {
+
+    }
 }

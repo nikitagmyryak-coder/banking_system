@@ -40,4 +40,9 @@ public class CheckingAccount extends Account {
     public String toString(){
         return "Checking Account: " + super.toString() + " | overdraft limit: " + String.format("%.2f",overdraftLimit);
     }
+
+    @Override
+    public void close() throws Exception {
+
+    }
 }

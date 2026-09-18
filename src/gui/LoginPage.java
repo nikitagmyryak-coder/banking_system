@@ -71,7 +71,7 @@ public class LoginPage extends JFrame implements ActionListener {
 
                     if(passwordStr.equals(temp.getPassword())){
 
-                        DashboardPage dash = new DashboardPage(temp);
+                        DashboardPage dash = new DashboardPage(temp, accountService);
                         this.dispose();
                     }
                     else{
