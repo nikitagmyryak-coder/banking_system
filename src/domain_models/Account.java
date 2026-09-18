@@ -13,7 +13,7 @@ import java.util.List;
  * writes transaction history
  */
 
-public abstract class Account {
+public abstract class Account implements AutoCloseable {
     private final String accountNumber;
     private final String holderName;
     private final String password;

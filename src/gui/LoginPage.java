@@ -1,6 +1,9 @@
 package gui;
 
 
+import domain_models.Account;
+import domain_models.AccountService;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,8 +14,10 @@ public class LoginPage extends JFrame implements ActionListener {
     JLabel label;
     JTextField login;
     JPasswordField password;
+    private final AccountService accountService;
 
-    public LoginPage(){
+    public LoginPage(AccountService accountService){
+        this.accountService = accountService;
 
         label = new JLabel();
         label.setText("Login");
@@ -52,6 +57,32 @@ public class LoginPage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == enter){
             System.out.println("User name input is: " + login.getText());
+
+            String loginStr = login.getText();
+            String passwordStr = new String(password.getPassword());
+
+            if(loginStr.isEmpty() || passwordStr.isEmpty()){
+                JOptionPane.showMessageDialog(this, "The login or password are not entered");
+                return;
+            }
+
+            try{
+                Account temp = accountService.getAccount(loginStr);
+
+                    if(passwordStr.equals(temp.getPassword())){
+
+                        DashboardPage dash = new DashboardPage(temp);
+                        this.dispose();
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Password is incorrect");
+                    }
+
+
+            }catch(Exception exception){
+                JOptionPane.showMessageDialog(this, "Account was not found");
+            }
+
         } else if (e.getSource() == signUp) {
             System.out.println("Sign Up clicked");
 
