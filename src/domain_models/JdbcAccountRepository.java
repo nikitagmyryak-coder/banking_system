@@ -9,7 +9,23 @@ public class JdbcAccountRepository implements AccountRepository{
     private final String url = "jdbc:mysql://localhost:3306/banking_system";
     private final String user = "root";
     private final String passwordSQL = "My_Mysql1";
+    private String index = "SELECT COUNT(*) FROM accounts";
 
+    @Override
+    public int count(){
+        try (Connection connection = DriverManager.getConnection(url, user, passwordSQL);
+             PreparedStatement stmt = connection.prepareStatement(index);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("An error occurred: " + e.getMessage(), e);
+        }
+        return 0;
+    }
 
     @Override
     public void save(Account account) {

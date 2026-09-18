@@ -14,31 +14,14 @@ public class AccountService {
     private final AccountRepository repository;
     private final JdbcTransactionRepository transactionRepository;
     private int nextAccountNumber;
-    private String index = "SELECT COUNT(*) FROM accounts";
-    private final String url = "jdbc:mysql://localhost:3306/banking_system";
-    private final String user = "root";
-    private final String passwordSQL = "My_Mysql1";
+
 
     public AccountService(AccountRepository repository, JdbcTransactionRepository transactionRepository) {
         this.repository = repository;
         this.transactionRepository = transactionRepository;
-        this.nextAccountNumber = getIndex() + 1;
+        this.nextAccountNumber = repository.count() + 1;
     }
 
-    public int getIndex() {
-        try (Connection connection = DriverManager.getConnection(url, user, passwordSQL);
-             PreparedStatement stmt = connection.prepareStatement(index);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("An error occurred: " + e.getMessage(), e);
-        }
-        return 0;
-    }
 
     public Account getAccount(String accountNumber){
         return repository

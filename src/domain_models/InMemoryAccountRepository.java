@@ -37,4 +37,9 @@ public class InMemoryAccountRepository implements AccountRepository {
     public boolean existsById(String id) {
         return accounts.containsKey(id);
     }
+
+    @Override
+    public int count(){
+        return accounts.size();
+    }
 }

@@ -12,4 +12,5 @@ public interface AccountRepository {
     List<Account> findAll();
     void deleteById(String id);
     boolean existsById(String id);
+    int count();
 }
