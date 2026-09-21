@@ -1,9 +1,6 @@
 package gui;
 
 import domain_models.AccountService;
-import domain_models.JdbcAccountRepository;
-import domain_models.JdbcTransactionRepository;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

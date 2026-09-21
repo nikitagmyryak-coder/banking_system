@@ -21,6 +21,7 @@ public class DashboardPage extends JFrame implements ActionListener {
     JButton withdraw;
     JButton transfer;
     JLabel balance;
+    JButton history;
 
     DashboardPage(Account account, AccountService as){
         this.account = account;
@@ -52,6 +53,10 @@ public class DashboardPage extends JFrame implements ActionListener {
         transfer.setBounds(40, 230, 120, 30);
         transfer.addActionListener(this);
 
+        history = new JButton("Transaction History");
+        history.setBounds(180, 350, 200, 30);
+        history.addActionListener(this);
+
         this.setSize(500, 450);
         this.setTitle(account.getAccountNumber());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,6 +70,7 @@ public class DashboardPage extends JFrame implements ActionListener {
         this.add(withdraw);
         this.add(transfer);
         this.add(balance);
+        this.add(history);
     }
 
 
@@ -130,6 +136,11 @@ public class DashboardPage extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this,
                         "Error occurred and im too lazy to cover all the cases here is the log: " + exception.getMessage());
             }
+        }
+
+        if(e.getSource() == history){
+            new TransactionHistoryPage(this.account);
+
         }
     }
 }
