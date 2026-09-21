@@ -13,13 +13,12 @@ import java.util.List;
  * writes transaction history
  */
 
-public abstract class Account implements AutoCloseable {
+public abstract class Account {
     private final String accountNumber;
     private final String holderName;
     private final String password;
     protected double balance = 0.0;
     protected List<Transaction> transactions = new ArrayList<>();
-    private static int nextTransactionId = 1;
 
     public Account(String accountNumber, String holderName, String password) {
         this.accountNumber = accountNumber;
@@ -50,32 +49,30 @@ public abstract class Account implements AutoCloseable {
     }
 
     // =============== METHODS ===============
-    public void deposit(double amount) {
+    public void deposit(String transactionId, double amount) {
         if (amount > 0) {
             balance += amount;
-            writeTransaction("Deposit", amount);
+            writeTransaction(transactionId, "Deposit", amount);
         }
         else {
             throw new InvalidAmountException("Invalid amount. Cannot deposit negative balance");
         }
     }
 
-    public void withdraw(double amount) {
+    public void withdraw(String transactionId, double amount) {
         if(amount <= 0) {
             throw new InvalidAmountException("Invalid amount. Cannot withdraw negative balance");
         }
         if (balance >= amount) {
             balance -= amount;
-            writeTransaction("Withdraw", amount);
+            writeTransaction(transactionId, "Withdraw", amount);
         }
         else {
             throw new InsufficientFundsException("Insufficient Funds");
         }
     }
 
-    protected void writeTransaction(String type, double amount){
-        String transactionId = String.format("TXN-%04d", nextTransactionId);
-        nextTransactionId++;
+    protected void writeTransaction(String transactionId, String type, double amount){
         LocalDateTime time = LocalDateTime.now();
         transactions.add(new Transaction(transactionId, type, amount, time));
     }

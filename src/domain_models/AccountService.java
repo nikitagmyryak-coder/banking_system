@@ -14,12 +14,14 @@ public class AccountService {
     private final AccountRepository repository;
     private final JdbcTransactionRepository transactionRepository;
     private int nextAccountNumber;
+    private int nextTransactionId;
 
 
     public AccountService(AccountRepository repository, JdbcTransactionRepository transactionRepository) {
         this.repository = repository;
         this.transactionRepository = transactionRepository;
         this.nextAccountNumber = repository.count() + 1;
+        this.nextTransactionId = transactionRepository.count() + 1;
     }
 
 
@@ -30,7 +32,7 @@ public class AccountService {
     }
     public void deposit(String accountNumber, double amount){
         Account temp = getAccount(accountNumber);
-        temp.deposit(amount);
+        temp.deposit(generateTransactionId(), amount);
         repository.save(temp);
 
         List<Transaction> transactionsList = temp.getTransactionHistory();
@@ -40,7 +42,7 @@ public class AccountService {
 
     public void withdraw(String accountNumber, double amount){
         Account temp = getAccount(accountNumber);
-        temp.withdraw(amount);
+        temp.withdraw(generateTransactionId(), amount);
         repository.save(temp);
 
         List<Transaction> transactionsList = temp.getTransactionHistory();
@@ -57,6 +59,12 @@ public class AccountService {
         String number = String.format("ACC-%04d", nextAccountNumber);
         nextAccountNumber += 1;
         return number;
+    }
+
+    private String generateTransactionId(){
+        String id = String.format("TXN-%04d", nextTransactionId);
+        nextTransactionId += 1;
+        return id;
     }
 
     public CheckingAccount createCheckingAccount(String holderName, String password, double overdraftLimit){

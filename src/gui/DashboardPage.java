@@ -82,6 +82,8 @@ public class DashboardPage extends JFrame implements ActionListener {
                 this.account = as.getAccount(account.getAccountNumber());
                 double balanceNew = this.account.getBalance();
                 balance.setText(String.format("%.2f", balanceNew) + "$");
+
+                System.out.println("Fresh balance: " + this.account.getBalance());
             }catch(InvalidAmountException iae){
                 JOptionPane.showMessageDialog(this, "The amount is invalid.\nPleas enter a number grater than 0");
             }catch(NumberFormatException nfe){

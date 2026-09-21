@@ -16,13 +16,13 @@ public class CheckingAccount extends Account {
     }
 
     @Override
-    public void withdraw(double amount) {
+    public void withdraw(String transactionId, double amount) {
         if (amount <= 0) {
             throw new InvalidAmountException("Invalid amount. Must be positive");
         }
         if ((balance - amount) >= -overdraftLimit) {
             balance -= amount;
-            writeTransaction("Withdraw", amount);
+            writeTransaction(transactionId, "Withdraw", amount);
         } else {
             throw new InsufficientFundsException("Exceeds overdraft limit");
         }
@@ -41,8 +41,4 @@ public class CheckingAccount extends Account {
         return "Checking Account: " + super.toString() + " | overdraft limit: " + String.format("%.2f",overdraftLimit);
     }
 
-    @Override
-    public void close() throws Exception {
-
-    }
 }
