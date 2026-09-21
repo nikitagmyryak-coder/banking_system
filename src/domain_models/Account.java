@@ -80,6 +80,10 @@ public abstract class Account implements AutoCloseable {
         transactions.add(new Transaction(transactionId, type, amount, time));
     }
 
+    protected void setBalance(double balance){
+        this.balance = balance;
+    }
+
     @Override
     public String toString(){
         return "[" + accountNumber + "] " + "Holder: " + holderName + " | Current balance: " + String.format("%.2f",balance) + "$";

@@ -106,6 +106,7 @@ public class JdbcAccountRepository implements AccountRepository{
                 String holderName = result.getString("holder_name");
                 String password = result.getString("password");
                 String accountType = result.getString("account_type");
+                double balance = result.getDouble("balance");
 
                 if(accountType.equals("CHECKING")){
                     String sqlChecking = "SELECT overdraft_limit FROM checking_accounts WHERE account_number = ?";
@@ -117,7 +118,11 @@ public class JdbcAccountRepository implements AccountRepository{
 
                         if(result2.next()){
                             double overdraftLimit = result2.getDouble("overdraft_limit");
-                            return Optional.of(new CheckingAccount(id, holderName, password, overdraftLimit));
+
+                            CheckingAccount ca = new CheckingAccount(id, holderName, password, overdraftLimit);
+                            ca.setBalance(balance);
+
+                            return Optional.of(ca);
                         }
                     }catch(SQLException e){
                         throw new RuntimeException("Failed to find account: " + e.getMessage(), e);
@@ -133,7 +138,11 @@ public class JdbcAccountRepository implements AccountRepository{
 
                         if(result3.next()){
                             double interestRate = result3.getDouble("interest_rate");
-                            return Optional.of(new SavingsAccount(id, holderName, password, interestRate));
+
+                            SavingsAccount sa = new SavingsAccount(id, holderName, password, interestRate);
+                            sa.setBalance(balance);
+
+                            return Optional.of(sa);
                         }
                     } catch(SQLException e){
                         throw new RuntimeException("Failed to find account: " + e.getMessage(), e);
@@ -166,6 +175,7 @@ public class JdbcAccountRepository implements AccountRepository{
                 String password = result.getString("password");
                 String accountType = result.getString("account_type");
                 String id = result.getString("account_number");
+                double balance = result.getDouble("balance");
 
                 if(accountType.equals("CHECKING")){
                     String sqlChecking = "SELECT overdraft_limit FROM checking_accounts WHERE account_number = ?";
@@ -176,7 +186,11 @@ public class JdbcAccountRepository implements AccountRepository{
 
                         if(result2.next()){
                             double overdraftLimit = result2.getDouble("overdraft_limit");
-                            list.add(new CheckingAccount(id, holderName, password, overdraftLimit));
+
+                            CheckingAccount ca = new CheckingAccount(id, holderName, password, overdraftLimit);
+                            ca.setBalance(balance);
+
+                            list.add(ca);
                         }
                     }
                 } else{
@@ -188,7 +202,11 @@ public class JdbcAccountRepository implements AccountRepository{
 
                         if(result3.next()){
                             double interestRate = result3.getDouble("interest_rate");
-                            list.add(new SavingsAccount(id, holderName, password, interestRate));
+
+                            SavingsAccount sa = new SavingsAccount(id, holderName, password, interestRate);
+                            sa.setBalance(balance);
+
+                            list.add(sa);
                         }
                     }
                 }
