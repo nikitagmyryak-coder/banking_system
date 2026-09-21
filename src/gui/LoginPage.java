@@ -86,7 +86,7 @@ public class LoginPage extends JFrame implements ActionListener {
         } else if (e.getSource() == signUp) {
             System.out.println("Sign Up clicked");
 
-            SignUpPage sup = new SignUpPage();
+            SignUpPage sup = new SignUpPage(this.accountService);
             this.dispose();
         }
     }

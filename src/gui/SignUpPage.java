@@ -27,12 +27,11 @@ public class SignUpPage extends JFrame implements ActionListener {
     JRadioButton accountTypeOptionChecking;
     JRadioButton accountTypeOptionSavings;
 
+    AccountService accountService;
 
-    JdbcAccountRepository jar = new JdbcAccountRepository();
-    JdbcTransactionRepository jtr = new JdbcTransactionRepository();
-    AccountService as = new AccountService(jar,jtr);
+    SignUpPage(AccountService accountService) {
+        this.accountService = accountService;
 
-    SignUpPage() {
         welcomeText = new JLabel("Welcome! Please enter you full name and password");
         welcomeText.setBounds(50, 30, 400, 30);
 
@@ -105,10 +104,10 @@ public class SignUpPage extends JFrame implements ActionListener {
             String pswrd = String.valueOf(passwordChars);
 
             if (accountTypeOptionChecking.isSelected()) {
-                as.createCheckingAccount(fullNameString, pswrd, 100.0);
+                accountService.createCheckingAccount(fullNameString, pswrd, 100.0);
                 JOptionPane.showMessageDialog(this, "Checking Account created successfully!");
             } else {
-                as.createSavingsAccount(fullNameString, pswrd, 0.05);
+                accountService.createSavingsAccount(fullNameString, pswrd, 0.05);
                 JOptionPane.showMessageDialog(this, "Savings Account created successfully!");
             }
         }
