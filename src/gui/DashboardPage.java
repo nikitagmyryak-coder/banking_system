@@ -2,6 +2,8 @@ package gui;
 
 import domain_models.Account;
 import domain_models.AccountService;
+import exceptions.AccountNotFoundException;
+import exceptions.InsufficientFundsException;
 import exceptions.InvalidAmountException;
 
 import javax.swing.*;
@@ -107,6 +109,26 @@ public class DashboardPage extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "The amount is invalid.\nPleas enter a number grater than 0");
             }catch(NumberFormatException nfe){
                 JOptionPane.showMessageDialog(this, "The amount is invalid.\nYou can`t enter a letter or a symbol");
+            }
+        }
+        
+        if(e.getSource() == transfer){
+            String accountTo = JOptionPane.showInputDialog(this,
+                    "Enter account number to transfer: ");
+            String amount = JOptionPane.showInputDialog(this,
+                    "Enter amount to transfer: ");
+
+            try{
+                as.transfer(
+                        account.getAccountNumber(), accountTo, Double.parseDouble(amount));
+
+                this.account = as.getAccount(account.getAccountNumber());
+                double balanceNew = this.account.getBalance();
+                balance.setText(String.format("%.2f", balanceNew) + "$");
+
+            }catch(InsufficientFundsException | InvalidAmountException | AccountNotFoundException | NumberFormatException exception){
+                JOptionPane.showMessageDialog(this,
+                        "Error occurred and im too lazy to cover all the cases here is the log: " + exception.getMessage());
             }
         }
     }
