@@ -83,7 +83,26 @@ public class DashboardPage extends JFrame implements ActionListener {
                 double balanceNew = this.account.getBalance();
                 balance.setText(String.format("%.2f", balanceNew) + "$");
 
-                System.out.println("Fresh balance: " + this.account.getBalance());
+                System.out.println("Fresh balance after deposit: " + this.account.getBalance());
+            }catch(InvalidAmountException iae){
+                JOptionPane.showMessageDialog(this, "The amount is invalid.\nPleas enter a number grater than 0");
+            }catch(NumberFormatException nfe){
+                JOptionPane.showMessageDialog(this, "The amount is invalid.\nYou can`t enter a letter or a symbol");
+            }
+        }
+
+        if(e.getSource() == withdraw){
+            String option = JOptionPane.showInputDialog(this,
+                    "Enter amount to withdraw(pretend like it is an ATM)");
+            double amount = Double.parseDouble(option);
+
+            try{
+                as.withdraw(account.getAccountNumber(), amount);
+                this.account = as.getAccount(account.getAccountNumber());
+                double balanceNew = this.account.getBalance();
+                balance.setText(String.format("%.2f", balanceNew) + "$");
+
+                System.out.println("Fresh balance after deposit: " + this.account.getBalance());
             }catch(InvalidAmountException iae){
                 JOptionPane.showMessageDialog(this, "The amount is invalid.\nPleas enter a number grater than 0");
             }catch(NumberFormatException nfe){
