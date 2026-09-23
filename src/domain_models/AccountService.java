@@ -51,6 +51,12 @@ public class AccountService {
     }
 
     public void transfer(String fromAccountNumber, String toAccountNumber, double amount){
+
+        if(fromAccountNumber.equals(toAccountNumber)){
+            System.out.println("User tried to transfer to themself");
+            throw new InvalidAmountException("Cannot transfer to the same account");
+        }
+
         withdraw(fromAccountNumber, amount);
         deposit(toAccountNumber, amount);
     }
