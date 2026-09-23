@@ -101,4 +101,8 @@ public class AccountService {
             throw new UnsupportedOperationException("not a saving account");
         }
     }
+
+    public List<Transaction> getTransactionHistory(String accountNumber){
+        return transactionRepository.findByAccountNumber(accountNumber);
+    }
 }

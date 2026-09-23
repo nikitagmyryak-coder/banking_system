@@ -1,23 +1,25 @@
 package gui;
 
 import domain_models.Account;
+import domain_models.AccountService;
 import domain_models.Transaction;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 public class TransactionHistoryPage extends JFrame implements ActionListener{
     Account account;
+    AccountService as;
     JLabel tableName;
     JButton back;
     JList<Transaction> transactionList;
     JScrollPane scrollPane;
 
-    TransactionHistoryPage(Account account){
+    TransactionHistoryPage(Account account, AccountService as){
         this.account = account;
-        this.transactionList = new JList<>(account.getTransactionHistory().toArray(new Transaction[0]));
+        this.as = as;
+        this.transactionList = new JList<>(as.getTransactionHistory(account.getAccountNumber())
+                        .toArray(new Transaction[0]));
         this.scrollPane = new JScrollPane(transactionList);
 
         scrollPane.setBounds(40, 60, 400, 280);

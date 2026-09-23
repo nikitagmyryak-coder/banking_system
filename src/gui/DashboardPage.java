@@ -139,7 +139,7 @@ public class DashboardPage extends JFrame implements ActionListener {
         }
 
         if(e.getSource() == history){
-            new TransactionHistoryPage(this.account);
+            new TransactionHistoryPage(this.account, this.as);
 
         }
     }

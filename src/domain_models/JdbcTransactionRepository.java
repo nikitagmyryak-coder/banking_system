@@ -1,7 +1,8 @@
 package domain_models;
 
 import java.sql.*;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JdbcTransactionRepository {
     private final String url = "jdbc:mysql://localhost:3306/banking_system";
@@ -9,6 +10,7 @@ public class JdbcTransactionRepository {
     private final String password = "My_Mysql1";
     private final String sqlHistory = "INSERT INTO transactions (transaction_id, account_number, type, amount, timestamp) VALUES (?, ?, ?, ?, ?)";
     private final String sqlCount = "SELECT count(*) FROM transactions";
+    private final String sqlHistoryList = "SELECT * FROM transactions WHERE account_number = ?";
 
     public int count(){
         try(Connection connection = DriverManager.getConnection(url, user, password);
@@ -40,5 +42,31 @@ public class JdbcTransactionRepository {
         }catch(SQLException e){
             throw new RuntimeException("Failed to save transaction history: " + e.getMessage(), e);
         }
+    }
+
+    public List<Transaction> findByAccountNumber(String accountNumber){
+
+        List<Transaction> transactionList = new ArrayList<>();
+
+        try(Connection connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement stmt = connection.prepareStatement(sqlHistoryList)){
+
+            stmt.setString(1,accountNumber);
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                String id = rs.getString("transaction_id");
+                String type = rs.getString("type");
+                double amount = rs.getDouble("amount");
+                Timestamp time = rs.getTimestamp("timestamp");
+
+                Transaction t = new Transaction(id, type, amount, time.toLocalDateTime());
+                transactionList.add(t);
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException("Failed to retrieve transaction history" + e.getMessage() , e);
+        }
+        return transactionList;
     }
 }
